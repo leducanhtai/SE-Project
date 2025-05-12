@@ -11,10 +11,20 @@ class WritingTestController extends Controller
     //
     public function index()
     {
-        $writingTests = WritingTest::where('task', 'task1')->get();
+        $writingTests = WritingTest::where('task', 'task2')->get();
         return view('writing.index', 
             [
                 'writingTests' => $writingTests
+            ]
+        );
+    }
+
+    public function show($id)
+    {
+        $writingTest = WritingTest::findOrFail($id);
+        return view('writing.show', 
+            [
+                'writingTest' => $writingTest
             ]
         );
     }

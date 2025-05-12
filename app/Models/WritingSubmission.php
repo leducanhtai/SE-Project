@@ -29,7 +29,7 @@ class WritingSubmission extends Model
         return $this->belongsTo(WritingTest::class, 'test_id');
     }
 
-    public function feedback()
+    public function feedbacks()
     {
         return $this->hasMany(WritingSubmissionFeedBack::class, 'submission_id');
     }

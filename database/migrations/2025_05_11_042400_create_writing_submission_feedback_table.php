@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('writing_submission_feedback', function (Blueprint $table) {
             $table->id();
             $table->foreignId('submission_id')->constrained('writing_submissions')->onDelete('cascade');
-            //$table->enum('task', ['task1', 'task2']); // Feedback thuộc task nào
             $table->text('original_text'); // Đoạn văn hoặc câu gốc
             $table->text('feedback'); // Góp ý từ AI
             $table->string('issue_type')->nullable(); // Loại lỗi: grammar, coherence, vocab, etc.
