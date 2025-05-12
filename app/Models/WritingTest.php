@@ -16,13 +16,11 @@ class WritingTest extends Model
         'image',
         'title',
         'description',
-        'task1-content',
-        'task1-image',
-        'task2-content',
-        'task2-image',
-        'task1-word-limit',
-        'task2-word-limit',
-        'time_limit'
+        'task_content',
+        'task_image',
+        'task_word_limit',
+        'time_limit',
+        'task',
     ];
 
     public function submissions()

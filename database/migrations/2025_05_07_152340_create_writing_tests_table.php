@@ -16,13 +16,11 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->text('task1_content')->nullable();
-            $table->string('task1_image')->nullable();
-            $table->text('task2_content')->nullable();
-            $table->string('task2_image')->nullable();
-            $table->integer('task1_word_limit')->nullable();
-            $table->integer('task2_word_limit')->nullable();
+            $table->text('task_content')->nullable();
+            $table->string('task_image')->nullable();
+            $table->integer('task_word_limit')->nullable();
             $table->integer('time_limit')->nullable(); 
+            $table->text('task')->nullable();
             $table->timestamps();
         });
     }

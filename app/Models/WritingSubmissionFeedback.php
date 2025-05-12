@@ -13,7 +13,7 @@ class WritingSubmissionFeedback extends Model
     // Các trường có thể gán giá trị hàng loạt
     protected $fillable = [
         'submission_id',
-        'task',
+        // 'task',
         'original_text',
         'feedback',
         'issue_type',
