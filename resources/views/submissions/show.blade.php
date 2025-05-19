@@ -1,134 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- <style>
-   .container{
-    color:  #f8f7b8;
 
-   }
-</style>
-<h2 class="overview">Overview</h2>
-
-<!-- PHẦN TỔNG QUAN - CHI TIẾT ĐIỂM SỐ -->
-<div class="container_overview">
-  <div class="left-section">
-    <div class="score-section">
-      <div class="score-container">
-        <h2 class="summary">Summary score</h2>
-        <div class="score">75%</div>
-        <div class="change">15% since last test</div>
-      </div>
-      <div class="pie"></div>
-    </div>
-  </div>
-  
-  <div class="right-section">
-    <h3>AVERAGE PERFORMANCE ON EACH SKILL</h3>
-    <div class="performance">
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-color" style="background: #72d8f8"></div>
-          Coherence
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: #7647db"></div>
-          Vocabulary
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: #07191e"></div>
-          Grammar
-        </div>
-      </div>
-      <div class="bars">
-        <div class="bar coherence"></div>
-        <div class="bar vocabulary"></div>
-        <div class="bar grammar"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PHẦN BÀI VIẾT ĐƯỢC CHẤM ĐIỂM - ĐƯA RA NGOÀI container_overview -->
-<div class="container">
-  <h2>Bài viết đã chấm điểm</h2>
-
-  <div id="essay" class="border p-3 rounded bg-light" style="white-space: pre-wrap;"></div>
-
-  <h4 class="mt-4">Phản hồi chi tiết</h4>
-  <ul>
-    @foreach ($submission->feedbacks as $fb)
-        <li><strong>{{ ucfirst($fb->issue_type ?? 'General') }}:</strong> {{ $fb->feedback }}</li>
-    @endforeach
-  </ul>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const content = @json($submission->content);
-        const feedbacks = @json($submission->feedbacks);
-
-        let segments = [];
-        let lastIndex = 0;
-
-        // Sort feedbacks by start_offset ascending
-        feedbacks.sort((a, b) => a.start_offset - b.start_offset);
-
-        feedbacks.forEach(fb => {
-            const { start_offset, end_offset, feedback, issue_type } = fb;
-
-            // Push plain text before highlight
-            if (start_offset > lastIndex) {
-                segments.push({
-                    type: 'text',
-                    content: content.slice(lastIndex, start_offset)
-                });
-            }
-
-            // Push highlighted text
-            segments.push({
-                type: 'highlight',
-                content: content.slice(start_offset, end_offset),
-                tooltip: feedback,
-                issue: issue_type
-            });
-
-            lastIndex = end_offset;
-        });
-
-        // Push remaining plain text
-        if (lastIndex < content.length) {
-            segments.push({
-                type: 'text',
-                content: content.slice(lastIndex)
-            });
-        }
-
-        // Render to DOM
-        const container = document.getElementById("essay");
-
-        segments.forEach(seg => {
-            const span = document.createElement("span");
-            span.textContent = seg.content;
-
-            if (seg.type === 'highlight') {
-                span.style.backgroundColor = seg.issue === 'coherence' ? '#ffeeba' :
-                                             seg.issue === 'vocabulary' ? '#cce5ff' :
-                                             '#d4edda';
-                span.title = seg.tooltip;
-                span.style.borderBottom = "1px dashed #666";
-                span.style.cursor = "help";
-            }
-
-            container.appendChild(span);
-        });
-    });
-</script> --}}
-
-<div class="p-[30px] w-[1400px] font-[Poppins] text-white bg-[#1e1432]">
+<!-- MAIN CONTAINER -->
+<div class="max-w-[1400px] w-full mx-auto font-[Poppins] text-white bg-[#1e1432] rounded-[20px]">
   <h2 class="text-[#f5d77f] text-[22px] font-semibold mb-[20px]">Overview</h2>
-  <div class="flex justify-between bg-[#554c69] p-[40px] rounded-[30px] gap-[40px]">
+  <div class="flex flex-wrap justify-between bg-[#554c69] p-[40px] rounded-[30px] gap-[40px]">
     <!-- LEFT SUMMARY -->
-    <div class="flex justify-between flex-[2] items-center ml-[20px] px-[100px]">
+    <div class="flex flex-[2] justify-between items-center px-[100px]">
       <div class="text-center">
         <p class="text-[24px] font-semibold mb-[10px]">summary score</p>
         <h1 class="text-[96px] font-bold m-0">75%</h1>
@@ -144,15 +23,9 @@
       </h3>
       <div class="flex">
         <ul class="list-none flex flex-col gap-[10px] text-[14px] font-medium p-0 text-black items-start mr-[100px]">
-          <li class="flex items-center gap-[6px]">
-            <span class="w-[12px] h-[12px] rounded-full bg-[#7edbfb] inline-block"></span> Coherence
-          </li>
-          <li class="flex items-center gap-[6px]">
-            <span class="w-[12px] h-[12px] rounded-full bg-[#7042e8] inline-block"></span> Vocabulary
-          </li>
-          <li class="flex items-center gap-[6px]">
-            <span class="w-[12px] h-[12px] rounded-full bg-[#041318] inline-block"></span> Grammar
-          </li>
+          <li class="flex items-center gap-[6px]"><span class="w-[12px] h-[12px] rounded-full bg-[#7edbfb] inline-block"></span> Coherence</li>
+          <li class="flex items-center gap-[6px]"><span class="w-[12px] h-[12px] rounded-full bg-[#7042e8] inline-block"></span> Vocabulary</li>
+          <li class="flex items-center gap-[6px]"><span class="w-[12px] h-[12px] rounded-full bg-[#041318] inline-block"></span> Grammar</li>
         </ul>
         <div class="flex justify-around items-end h-[160px] mb-[20px] gap-[6px]">
           <div class="bar-chart w-[40px] h-[150px] rounded-t-[20px] bg-[#7edbfb] delay-[200ms]"></div>
@@ -164,61 +37,77 @@
   </div>
 </div>
 
-<div class="ai-feedback">
-  <div class="feedback-title">AI Feedback</div>
-  <div class="desc">
-    <p><span class="span-desc">The bar chart illustrates the amount of money donated by a company to six different types of</span> charity from 2012 to 2014.
-  
-  Overall, it is evident that social welfare consistently received the largest donations, whereas wildlife and arts attracted the least funding throughout the period. Additionally, while some categories witnessed fluctuations, others experienced steady increases or remained relatively unchanged.
-  
-  In 2012, social welfare topped the list with approximately 25 units of donation, which rose slightly to nearly 27 in 2014. Similarly, education and environment also saw modest increases during this period. The amount donated to education was around 7 units in 2012 but rose slightly to about 10 units in 2014. Donations to environmental charities followed a similar trend, growing steadily from approximately 9 units in 2012 to 12 units in 2014.
-  In contrast, donations to health charities experienced a moderate increase, starting at roughly 15 units in 2012 and peaking at about 18 units in 2014. Meanwhile, wildlife charities saw a small but steady rise, from around 5 units in 2012 to 7 units by 2014. Arts consistently received the least funding, with donations remaining stable at approximately 3 units across all three years.</p>
+<!-- AI FEEDBACK -->
+<div class="ai-feedback max-w-[1400px] w-full mx-auto mt-[50px] text-white font-[Poppins]">
+  <div class="feedback-title text-[#f5d77f] text-[24px] font-bold mb-[10px]">AI Feedback</div>
+  <div class="desc p-[20px] bg-white/25 rounded-[30px] text-[24px]">
+    <p><span class="span-desc bg-green-300/60">The bar chart illustrates the amount of money donated by a company to six different types of</span> charity from 2012 to 2014.
+
+      The bar chart illustrates the amount of money <span class="span-desc bg-green-300/60">donated by</span> a company to six different types of charity from 2012 to 2014.
+
+Overall, it is evident that social welfare consistently received the largest donations, whereas wildlife and arts attracted the least funding throughout the period. Additionally, while some categories witnessed fluctuations, others experienced steady increases or remained relatively unchanged.
+
+<span class="span-desc-red bg-red-200/60">In 2012, social welfare topped the list with approximately 25 units of donation,</span> which rose slightly to nearly 27 in 2014. Similarly, education and environment also saw modest increases during this period. The amount donated to education was around 7 units in 2012 but rose slightly to about 10 units in 2014. Donations to environmental charities followed a similar trend, growing steadily from approximately 9 units in 2012 to 12 units in 2014.
+In contrast, donations to health charities experienced a <span class="span-desc-highlight bg-yellow-200/60">moderate increase, starting at roughly</span> 15 units in 2012 and peaking at about 18 units in 2014. Meanwhile, wildlife charities saw a small but steady rise, from around 5 units in 2012 to 7 units by 2014. Arts consistently received the least funding, with donations remaining stable at approximately 3 units across all three years.
+
+      <span class="span-desc-highlight bg-yellow-200/60">In 2012, social welfare topped the list with approximately 25 units of donation</span>, which rose slightly to nearly 27 in 2014...
+    </p>
   </div>
+</div>
+
+<!-- GENERAL COMMENTS -->
+<div class="general max-w-[1400px] w-full mx-auto mt-[50px] text-white">
+  <h2 class="title text-[#f5d77f] text-[24px] font-bold mb-[30px]">General comments</h2>
+  <div class="general-comments bg-white/25 p-[30px] rounded-[30px] space-y-[30px]">
+    <div class="comment-section">
+      <h3 class="subtitle text-[20px] font-bold mb-[12px]">Strong points</h3>
+      <div class="comment-box bg-white text-black p-[20px_25px] rounded-[20px] leading-[1.6]">
+        <p>Bài viết vẫn tồn tại một số điểm cần khắc phục. Việc lặp lại từ vựng như “slightly” và “approximately” khiến bài viết có phần đơn điệu, cần đa dạng hóa cách diễn đạt. Một số từ như “witnessed fluctuations” chưa hoàn toàn chính xác với dữ liệu, nên được điều chỉnh để tránh gây hiểu nhầm. Cuối cùng, người viết có thể cải thiện tính liên kết giữa các câu bằng cách sử dụng thêm các từ nối và cấu trúc chuyển ý phù hợp nhằm tăng tính mạch lạc (cohesion) cho bài.</p>
+      </div>
+    </div>
+
+    <div class="comment-section">
+      <h3 class="subtitle text-[20px] font-bold mb-[12px]">Needs improvement</h3>
+      <div class="comment-box bg-white text-black p-[20px_25px] rounded-[20px] leading-[1.6]">
+        <p>Bài viết thể hiện khả năng paraphrase tốt, với cấu trúc đoạn rõ ràng và dễ theo dõi. Tác giả đã mô tả đầy đủ các dữ liệu chính trong biểu đồ mà không bỏ sót nội dung quan trọng. Ngoài ra, từ vựng được sử dụng khá chính xác, nổi bật với các cụm như “peaking”, “modest increase” và “remained stable”, cho thấy người viết có khả năng lựa chọn từ ngữ phù hợp với ngữ cảnh mô tả số liệu.</p>
+      </div>
+    </div>
+
   </div>
-  <div id="tooltip" class="tooltip">Thông tin chi tiết Thông tin chi tiết Thông tin chi tiết Thông tin chi tiết</div>
+</div>
+
+<a href="{{ route('writing.test.index') }}" class="back-btn bg-[#f5d77f] text-[#1b0f2e] px-[30px] py-[10px] rounded-full font-bold text-[16px] float-right">BACK</a>
+
+<div id="tooltip" class="tooltip">Câu mở đầu rõ ràng và chính xác, paraphrase tốt đề bài.</div>
+<div id="tooltip-highlight" class="tooltip tooltip-highlight">Không hoàn toàn chính xác vì dữ liệu trong bài dường như không biến động quá lớn. Có thể thay bằng "some categories experienced moderate growth or remained stable."</div>
+<div id="tooltip-red" class="tooltip tooltip-red">Không hoàn toàn chính xác vì dữ liệu trong bài dường như không biến động quá lớn. Có thể thay bằng "some categories experienced moderate growth or remained stable."</div>
+
 
   <style>
-    .ai-feedback {
-      padding: 20px;
-      border-radius: 20px;
-      margin-top: 50px;
-      margin: 0 auto;
-    }
-
-    .feedback-title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #f5d77f;
-      margin-bottom: 10px;
-    }
-
-    .desc {
-      font-size: 24px;
-      color: #fff;
-    }
-    .desc{
-      max-width: 1400px;
-      padding: 20px;
-      background-color: rgba(255, 255, 255, 0.25);
-      border-radius: 30px;
-    }
-    .span-desc{
-      background-color: rgba(126, 212, 126, 0.54);
-    }
-
      /* Tooltip style */
-  .tooltip {
-    font-size: 50px;
-    position: absolute;
-    background-color: #0c3b07;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    display: none;
-    z-index: 999;
-    white-space: nowrap;
-  }
+    .tooltip {
+      font-size: 50px;
+      position: absolute;
+      background-color: #0c3b07;
+      color: white;
+      padding: 15px 12px;
+      border-radius: 8px;
+      font-size: 24px !important;
+      display: none;
+      z-index: 999;
+
+      max-width: 700px;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .tooltip-highlight {
+      background-color: #8e711b !important;
+    }
+
+    .tooltip-red {
+      background-color: #4d0909 !important;
+    }
 
   @keyframes rotateIn {
     0% {
@@ -254,45 +143,85 @@
   }
   </style>
 
-  <script>
-  const spanDesc = document.querySelector(".span-desc");
-  const tooltip = document.getElementById("tooltip");
+<script>
+  // ==== Tooltip logic ====
 
- 
-  spanDesc.addEventListener("click", function (e) {
-    e.stopPropagation(); 
-    tooltip.style.display = "block";
-    tooltip.style.left = `${e.pageX + 10}px`;
-    tooltip.style.top = `${e.pageY + 10}px`;
-  });
+  function showTooltip(tooltipEl, event) {
+    tooltipEl.style.display = "block";
+    tooltipEl.style.left = `${event.pageX + 10}px`;
+    tooltipEl.style.top = `${event.pageY + 10}px`;
+  }
 
+  function hideTooltips(...tooltips) {
+    tooltips.forEach(t => t.style.display = "none");
+  }
 
-  document.addEventListener("click", function (e) {
-    if (!tooltip.contains(e.target) && !spanDesc.contains(e.target)) {
-      tooltip.style.display = "none";
-    }
-  });
-  
-  window.addEventListener('load', () => {
-    // Pie chart giữ nguyên
-    const pie = document.querySelector('.pie-chart');
-    if (pie) {
-      pie.classList.remove('animate-rotate-in');
-      void pie.offsetWidth;
-      pie.classList.add('animate-rotate-in');
-    }
+  function setupTooltip(triggerSelector, tooltipEl, othersToHide = []) {
+    const triggers = document.querySelectorAll(triggerSelector);
+    if (!triggers.length) return;
 
-    // Bars: dùng animation "grow"
-    const bars = document.querySelectorAll('.bar-chart');
-    bars.forEach(bar => {
-      bar.classList.remove('animate-grow');
-      void bar.offsetWidth;
-      bar.classList.add('animate-grow');
+    triggers.forEach(trigger => {
+      trigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        hideTooltips(...othersToHide);
+        showTooltip(tooltipEl, e);
+      });
     });
+  }
+
+  function setupGlobalTooltipClose(tooltipMap) {
+    document.addEventListener("click", function (e) {
+      for (const [triggers, tooltip] of tooltipMap) {
+        const triggerList = Array.isArray(triggers) ? triggers : Array.from(triggers);
+        const clickedInsideTrigger = triggerList.some(trigger => trigger.contains(e.target));
+        if (!tooltip.contains(e.target) && !clickedInsideTrigger) {
+          tooltip.style.display = "none";
+        }
+      }
+    });
+  }
+
+  // ==== Animation logic ====
+
+  function resetAnimation(el, className) {
+    el.classList.remove(className);
+    void el.offsetWidth; // Trigger reflow
+    el.classList.add(className);
+  }
+
+  function animateOnLoad() {
+    const pie = document.querySelector('.pie-chart');
+    if (pie) resetAnimation(pie, 'animate-rotate-in');
+
+    const bars = document.querySelectorAll('.bar-chart');
+    bars.forEach(bar => resetAnimation(bar, 'animate-grow'));
+  }
+
+  // ==== Khởi tạo sau khi load ====
+
+  window.addEventListener('load', () => {
+    const tooltip = document.getElementById("tooltip");
+    const tooltipHighlight = document.getElementById("tooltip-highlight");
+    const tooltipRed = document.getElementById("tooltip-red");
+
+    const spanDescs = document.querySelectorAll(".span-desc");
+    const spanDescHighlights = document.querySelectorAll(".span-desc-highlight");
+    const spanDescReds = document.querySelectorAll(".span-desc-red");
+
+    setupTooltip(".span-desc", tooltip, [tooltipHighlight]);
+    setupTooltip(".span-desc-highlight", tooltipHighlight, [tooltip]);
+    setupTooltip(".span-desc-red", tooltipRed, [tooltip]);
+
+    setupGlobalTooltipClose([
+      [spanDescs, tooltip],
+      [spanDescHighlights, tooltipHighlight],
+      [spanDescReds, tooltipRed]
+    ]);
+
+    animateOnLoad();
   });
-
-
-  
 </script>
+
+
 
 @endsection
