@@ -17,6 +17,9 @@
 
         <form action="{{ route('writing.submit') }}" method="POST">
             @csrf
+            <input type="hidden" name="test_id" value="{{ $writingTest->id }}">
+
+
             <textarea id="writingAnswer"
                       name="content"
                       required

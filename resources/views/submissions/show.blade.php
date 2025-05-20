@@ -10,10 +10,16 @@
     <div class="flex flex-[2] justify-between items-center px-[100px]">
       <div class="text-center">
         <p class="text-[24px] font-semibold mb-[10px]">summary score</p>
-        <h1 class="text-[96px] font-bold m-0">75%</h1>
+        <h1 class="text-[96px] font-bold m-0">{{ $submission->ai_score*10 }}%</h1>
         <p class="text-[24px] mt-[8px]">15% <span class="ml-[8px]">since last test</span></p>
       </div>
-      <div class="pie-chart w-[227px] h-[227px] rounded-full bg-[conic-gradient(#7edbfb_0%_75%,_#7e7a85_0%_0%)] m-auto animate-rotate-in"></div>
+      @php
+        $score = $submission->ai_score ?? 0;
+        $circlePercent = min(max($score * 10, 0), 100);
+      @endphp
+
+      <div class="pie-chart w-[227px] h-[227px] rounded-full" style="background: conic-gradient(#7edbfb 0% {{ $circlePercent }}%, #7e7a85 0%);"></div>
+
     </div>
 
     <!-- RIGHT CHART -->
@@ -27,11 +33,19 @@
           <li class="flex items-center gap-[6px]"><span class="w-[12px] h-[12px] rounded-full bg-[#7042e8] inline-block"></span> Vocabulary</li>
           <li class="flex items-center gap-[6px]"><span class="w-[12px] h-[12px] rounded-full bg-[#041318] inline-block"></span> Grammar</li>
         </ul>
-        <div class="flex justify-around items-end h-[160px] mb-[20px] gap-[6px]">
-          <div class="bar-chart w-[40px] h-[150px] rounded-t-[20px] bg-[#7edbfb] delay-[200ms]"></div>
-          <div class="bar-chart w-[40px] h-[160px] rounded-t-[20px] bg-[#7042e8] delay-[400ms]"></div>
-          <div class="bar-chart w-[40px] h-[100px] rounded-t-[20px] bg-[#041318] delay-[600ms]"></div>
-        </div>
+@php
+  $barUnit = 10; // 1 điểm = 10px
+  $coherenceHeight = $submission->coherence_score * $barUnit;
+  $vocabularyHeight = $submission->vocabulary_score * $barUnit;
+  $grammarHeight = $submission->grammar_score * $barUnit;
+@endphp
+
+<div class="flex justify-around items-end h-[160px] mb-[20px] gap-[6px]">
+  <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#7edbfb] delay-[200ms]" style="height: {{ $coherenceHeight }}px"></div>
+  <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#7042e8] delay-[400ms]" style="height: {{ $vocabularyHeight }}px"></div>
+  <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#041318] delay-[600ms]" style="height: {{ $grammarHeight }}px"></div>
+</div>
+
       </div>
     </div>
   </div>

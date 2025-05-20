@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Http;
 use App\Models\WritingSubmission;
 use App\Models\WritingSubmissionFeedback;
 use App\Models\WritingTest;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 class AiScoringService
@@ -17,13 +16,19 @@ class AiScoringService
         $content = $data['content'];
         $wordCount = str_word_count(strip_tags($content));
 
-        $prompt = "
-            You are an IELTS writing examiner. Please:
-            1. Evaluate the following writing task and essay response.
-            2. Provide scores (0–9) for grammar, vocabulary, and coherence.
-            3. Give overall feedback and detailed comments in this JSON format:
-               {
-                    \"overall_score\": float,
+        $chunks = $this->splitEssayIntoChunks($content, 70);
+
+        $allFeedback = [];
+        $totalScore = ['grammar' => 0, 'vocabulary' => 0, 'coherence' => 0, 'count' => 0];
+        $overallFeedbacks = [];
+
+        foreach ($chunks as $index => $chunk) {
+            $prompt = "
+                You are an IELTS examiner. Please evaluate the following essay section.
+                Provide scores (0–9) for grammar, vocabulary, and coherence,
+                and return feedback in JSON format:
+
+                {
                     \"grammar\": float,
                     \"vocabulary\": float,
                     \"coherence\": float,
@@ -35,58 +40,76 @@ class AiScoringService
                             \"issue_type\": \"grammar|vocabulary|coherence\",
                             \"start_offset\": int,
                             \"end_offset\": int
-                        }]
+                        }
+                    ]
                 }
 
-            --- Writing Task ---
-            Title: {$test->title}
-            Description: {$test->description}
-            Instructions: {$test->task_content}
-            Word Limit: {$test->task_word_limit}
+                --- Essay Section #{$index} ---
+                {$chunk}
+            ";
 
-            --- Essay ---
-            {$content}
-        ";
+            $response = Http::timeout(60)->withHeaders([
+                'api-key' => env('AZURE_OPENAI_API_KEY'),
+                'Content-Type' => 'application/json',
+            ])->post(
+                rtrim(env('AZURE_OPENAI_ENDPOINT'), '/') . '/openai/deployments/' . env('AZURE_OPENAI_DEPLOYMENT') . '/chat/completions?api-version=' . env('AZURE_OPENAI_API_VERSION', '2025-01-01-preview'),
+                [
+                    'messages' => [
+                        ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+                        ['role' => 'user', 'content' => $prompt],
+                    ],
+                    'temperature' => 0.3,
+                    'max_tokens' => 500,
+                ]
+            );
 
-        $response = Http::withHeaders([
-            'api-key' => env('AZURE_OPENAI_API_KEY'),
-            'Content-Type' => 'application/json',
-        ])->post(rtrim(env('AZURE_OPENAI_ENDPOINT'), '/') . '/openai/deployments/' . env('AZURE_OPENAI_DEPLOYMENT') . '/chat/completions?api-version=' . env('AZURE_OPENAI_API_VERSION', '2025-01-01-preview'), [
-            'messages' => [
-                ['role' => 'system', 'content' => 'You are a helpful assistant.'],
-                ['role' => 'user', 'content' => $prompt]
-            ],
-            'temperature' => 0.3,
-            'max_tokens' => 500,
-        ]);
+            $json = $response->json();
+            $resultContent = $json['choices'][0]['message']['content'] ?? null;
 
-        $json = $response->json();
-        $resultContent = $json['choices'][0]['message']['content'] ?? null;
+            if (!$resultContent || !preg_match('/({.*})/s', $resultContent, $matches)) {
+                Log::error("Chunk #$index error", ['response' => $json]);
+                continue;
+            }
 
-        if (!$resultContent) {
-            return ['error' => 'Azure không trả về nội dung.', 'response' => $json];
+            $parsed = json_decode($matches[1], true);
+
+            if (!$parsed) {
+                continue;
+            }
+
+            $totalScore['grammar'] += $parsed['grammar'] ?? 0;
+            $totalScore['vocabulary'] += $parsed['vocabulary'] ?? 0;
+            $totalScore['coherence'] += $parsed['coherence'] ?? 0;
+            $totalScore['count']++;
+
+            $overallFeedbacks[] = $parsed['overall_feedback'] ?? '';
+            $allFeedback = array_merge($allFeedback, $parsed['detailed_feedback'] ?? []);
+
+            sleep(2); 
         }
 
-        preg_match('/({.*})/s', $resultContent, $matches);
-        $parsed = json_decode($matches[1] ?? '', true);
-
-        if (!$parsed) {
-            return ['error' => 'Không thể parse JSON từ Azure.', 'raw' => $resultContent];
+        if ($totalScore['count'] === 0) {
+            return ['error' => 'Không thể lấy phản hồi từ Azure.'];
         }
+
+        $avgGrammar = round($totalScore['grammar'] / $totalScore['count'], 1);
+        $avgVocabulary = round($totalScore['vocabulary'] / $totalScore['count'], 1);
+        $avgCoherence = round($totalScore['coherence'] / $totalScore['count'], 1);
+        $overallScore = round(($avgGrammar + $avgVocabulary + $avgCoherence) / 3, 1);
 
         $submission = WritingSubmission::create([
             'test_id' => $test->id,
             'content' => $content,
             'word_count' => $wordCount,
-            'ai_score' => $parsed['overall_score'] ?? null,
-            'ai_feedback' => $parsed['overall_feedback'] ?? '',
-            'grammar_score' => $parsed['grammar'] ?? null,
-            'vocabulary_score' => $parsed['vocabulary'] ?? null,
-            'coherence_score' => $parsed['coherence'] ?? null,
+            'ai_score' => $overallScore,
+            'ai_feedback' => implode("\n\n", $overallFeedbacks),
+            'grammar_score' => $avgGrammar,
+            'vocabulary_score' => $avgVocabulary,
+            'coherence_score' => $avgCoherence,
             'submitted_at' => now(),
         ]);
 
-        foreach ($parsed['detailed_feedback'] ?? [] as $fb) {
+        foreach ($allFeedback as $fb) {
             WritingSubmissionFeedback::create([
                 'submission_id' => $submission->id,
                 'original_text' => $fb['original_text'],
@@ -98,5 +121,30 @@ class AiScoringService
         }
 
         return ['submission' => $submission->load('feedbacks')];
+    }
+
+    /**
+     * Tách bài viết thành nhiều đoạn khoảng 300 từ
+     */
+    private function splitEssayIntoChunks(string $content, int $maxWords = 300): array
+    {
+        $words = preg_split('/\s+/', strip_tags($content));
+        $chunks = [];
+        $current = [];
+
+        foreach ($words as $word) {
+            $current[] = $word;
+
+            if (count($current) >= $maxWords) {
+                $chunks[] = implode(' ', $current);
+                $current = [];
+            }
+        }
+
+        if (!empty($current)) {
+            $chunks[] = implode(' ', $current);
+        }
+
+        return $chunks;
     }
 }
