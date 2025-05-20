@@ -10,7 +10,7 @@
     <div class="flex flex-[2] justify-between items-center px-[100px]">
       <div class="text-center">
         <p class="text-[24px] font-semibold mb-[10px]">summary score</p>
-        <h1 class="text-[96px] font-bold m-0">{{ $submission->ai_score*10 }}%</h1>
+        <h1 id="score-display" class="text-[96px] font-bold m-0" data-score="{{ $submission->ai_score*10 ?? 0 }}">0%</h1>
         <p class="text-[24px] mt-[8px]">15% <span class="ml-[8px]">since last test</span></p>
       </div>
       @php
@@ -211,6 +211,22 @@ In contrast, donations to health charities experienced a <span class="span-desc
     bars.forEach(bar => resetAnimation(bar, 'animate-grow'));
   }
 
+  function animateScore() {
+    const scoreEl = document.getElementById("score-display");
+    const targetScore = parseInt(scoreEl.dataset.score) || 0;
+    let current = 0;
+
+    const increment = Math.ceil(targetScore / 60);
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= targetScore) {
+        current = targetScore;
+        clearInterval(interval);
+      }
+      scoreEl.textContent = `${current}%`;
+    }, 20); 
+  }
+
   // ==== Khởi tạo sau khi load ====
 
   window.addEventListener('load', () => {
@@ -233,6 +249,7 @@ In contrast, donations to health charities experienced a <span class="span-desc
     ]);
 
     animateOnLoad();
+    animateScore();
   });
 </script>
 
