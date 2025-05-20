@@ -12,7 +12,8 @@ class AiScoringService
 {
     public function scoreAndStore(array $data)
     {
-        $test = WritingTest::findOrFail($data['test_id']);
+        $submission = WritingSubmission::findOrFail($data['submission_id']);
+        $test = \App\Models\WritingTest::findOrFail($data['test_id']);
         $content = $data['content'];
         $wordCount = str_word_count(strip_tags($content));
 
@@ -97,16 +98,12 @@ class AiScoringService
         $avgCoherence = round($totalScore['coherence'] / $totalScore['count'], 1);
         $overallScore = round(($avgGrammar + $avgVocabulary + $avgCoherence) / 3, 1);
 
-        $submission = WritingSubmission::create([
-            'test_id' => $test->id,
-            'content' => $content,
-            'word_count' => $wordCount,
+        $submission->update([
             'ai_score' => $overallScore,
             'ai_feedback' => implode("\n\n", $overallFeedbacks),
             'grammar_score' => $avgGrammar,
             'vocabulary_score' => $avgVocabulary,
             'coherence_score' => $avgCoherence,
-            'submitted_at' => now(),
         ]);
 
         foreach ($allFeedback as $fb) {

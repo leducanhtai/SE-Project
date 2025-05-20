@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\AiScoringService;
+use App\Jobs\ProcessWritingSubmission;
 use App\Models\WritingSubmission;
+use App\Models\WritingTest;
+use App\Models\WritingSubmissionFeedBack;
+use App\Services\AiScoringService;
+
 
 class WritingSubmissionController extends Controller
 {
-    protected $aiScoring;
-
-    public function __construct(AiScoringService $aiScoring)
-    {
-        $this->aiScoring = $aiScoring;
-    }
-
     public function submit(Request $request)
     {
         $validated = $request->validate([
@@ -22,14 +19,19 @@ class WritingSubmissionController extends Controller
             'content' => 'required|string|min:50',
         ]);
 
-        $result = $this->aiScoring->scoreAndStore($validated);
+        $submission = WritingSubmission::create([
+            'test_id' => $validated['test_id'],
+            'content' => $validated['content'],
+            'word_count' => str_word_count(strip_tags($validated['content'])),
+            'submitted_at' => now(),
+        ]);
 
-        if (isset($result['error'])) {
-            return response()->json($result, 500);
-        }
+        ProcessWritingSubmission::dispatch([
+            ...$validated,
+            'submission_id' => $submission->id,
+        ]);
 
-        return redirect()->route('submissions.processing', ['id' => $result['submission']->id]);
-
+        return redirect()->route('submissions.processing', ['id' => $submission->id]);
     }
 
     public function show($id)
@@ -42,7 +44,4 @@ class WritingSubmissionController extends Controller
     {
         return view('submissions.processing', ['submissionId' => $id]);
     }
-
-
-
 }
