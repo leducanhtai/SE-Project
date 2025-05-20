@@ -20,6 +20,14 @@ class AiScoringServiceTest extends TestCase
         // Tạo dữ liệu giả WritingTest
         $test = WritingTest::factory()->create();
 
+        // Tạo dữ liệu giả WritingSubmission
+        $submission = WritingSubmission::create([
+            'test_id' => $test->id,
+            'content' => str_repeat("This is a test sentence. ", 100),
+            'word_count' => 100,
+            'submitted_at' => now(),
+        ]);
+
         // Mock HTTP response từ Azure API
         Http::fake([
             '*' => Http::response([
@@ -51,7 +59,8 @@ class AiScoringServiceTest extends TestCase
 
         $result = $service->scoreAndStore([
             'test_id' => $test->id,
-            'content' => str_repeat("This is a test sentence. ", 100), // khoảng 100 câu
+            'submission_id' => $submission->id, // Thêm dòng này
+            'content' => $submission->content,
         ]);
 
         $this->assertArrayHasKey('submission', $result);
