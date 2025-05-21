@@ -8,6 +8,7 @@ use App\Models\WritingSubmission;
 use App\Models\WritingTest;
 use App\Models\WritingSubmissionFeedBack;
 use App\Services\AiScoringService;
+use Illuminate\Support\Str;
 
 
 class WritingSubmissionController extends Controller
@@ -34,11 +35,41 @@ class WritingSubmissionController extends Controller
         return redirect()->route('submissions.processing', ['id' => $submission->id]);
     }
 
-    public function show($id)
-    {
-        $submission = WritingSubmission::with('feedbacks')->findOrFail($id);
-        return view('submissions.show', compact('submission'));
+   public function show($id)
+   {
+    $submission = WritingSubmission::with('feedbacks')->findOrFail($id);
+    $content = $submission->content;
+    $feedbacks = $submission->feedbacks;
+
+    $feedbacks = $feedbacks->sortBy('start_offset');
+
+    $modified = '';
+    $lastPos = 0;
+
+    foreach ($feedbacks as $f) {
+        $start = $f->start_offset;
+        $end = $f->end_offset;
+        $segment = Str::of($content)->substr($start, $end - $start);
+
+        $class = match ($f->issue_type) {
+            'coherence' => 'span-desc bg-green-300/60',
+            'grammar' => 'span-desc-highlight bg-yellow-200/60',
+            'vocabulary' => 'span-desc-red bg-red-200/60',
+            default => '',
+        };
+
+        $modified .= e(Str::of($content)->substr($lastPos, $start - $lastPos));
+        $modified .= "<span class=\"{$class}\" data-tooltip=\"".e($f->feedback)."\">".e($segment)."</span>";
+        $lastPos = $end;
     }
+
+    $modified .= e(Str::of($content)->substr($lastPos));
+
+    return view('submissions.show', [
+        'submission' => $submission,
+        'highlightedContent' => $modified,
+    ]);
+   }
 
     public function processing($id)
     {

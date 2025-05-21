@@ -55,17 +55,10 @@
 <div class="ai-feedback max-w-[1400px] w-full mx-auto mt-[50px] text-white font-[Poppins]">
   <div class="feedback-title text-[#f5d77f] text-[24px] font-bold mb-[10px]">AI Feedback</div>
   <div class="desc p-[20px] bg-white/25 rounded-[30px] text-[24px]">
-    <p><span class="span-desc bg-green-300/60">The bar chart illustrates the amount of money donated by a company to six different types of</span> charity from 2012 to 2014.
-
-      The bar chart illustrates the amount of money <span class="span-desc bg-green-300/60">donated by</span> a company to six different types of charity from 2012 to 2014.
-
-Overall, it is evident that social welfare consistently received the largest donations, whereas wildlife and arts attracted the least funding throughout the period. Additionally, while some categories witnessed fluctuations, others experienced steady increases or remained relatively unchanged.
-
-<span class="span-desc-red bg-red-200/60">In 2012, social welfare topped the list with approximately 25 units of donation,</span> which rose slightly to nearly 27 in 2014. Similarly, education and environment also saw modest increases during this period. The amount donated to education was around 7 units in 2012 but rose slightly to about 10 units in 2014. Donations to environmental charities followed a similar trend, growing steadily from approximately 9 units in 2012 to 12 units in 2014.
-In contrast, donations to health charities experienced a <span class="span-desc-highlight bg-yellow-200/60">moderate increase, starting at roughly</span> 15 units in 2012 and peaking at about 18 units in 2014. Meanwhile, wildlife charities saw a small but steady rise, from around 5 units in 2012 to 7 units by 2014. Arts consistently received the least funding, with donations remaining stable at approximately 3 units across all three years.
-
-      <span class="span-desc-highlight bg-yellow-200/60">In 2012, social welfare topped the list with approximately 25 units of donation</span>, which rose slightly to nearly 27 in 2014...
+    <p id="feedback-text" class="leading-8 text-[18px]">
+       {!! $highlightedContent !!}
     </p>
+
   </div>
 </div>
 
@@ -161,27 +154,43 @@ In contrast, donations to health charities experienced a <span class="span-desc
   // ==== Tooltip logic ====
 
   function showTooltip(tooltipEl, event) {
-    tooltipEl.style.display = "block";
-    tooltipEl.style.left = `${event.pageX + 10}px`;
-    tooltipEl.style.top = `${event.pageY + 10}px`;
-  }
+  tooltipEl.style.display = "block";
+  tooltipEl.style.left = `${event.pageX + 10}px`;
+  tooltipEl.style.top = `${event.pageY + 10}px`;
+}
+
 
   function hideTooltips(...tooltips) {
     tooltips.forEach(t => t.style.display = "none");
   }
 
-  function setupTooltip(triggerSelector, tooltipEl, othersToHide = []) {
-    const triggers = document.querySelectorAll(triggerSelector);
-    if (!triggers.length) return;
+  function setupAutoTooltip() {
+  document.addEventListener('click', function (e) {
+  const tooltip = document.getElementById("tooltip");
+  const tooltipHighlight = document.getElementById("tooltip-highlight");
+  const tooltipRed = document.getElementById("tooltip-red");
 
-    triggers.forEach(trigger => {
-      trigger.addEventListener("click", function (e) {
-        e.stopPropagation();
-        hideTooltips(...othersToHide);
-        showTooltip(tooltipEl, e);
-      });
-    });
+  if (e.target.matches('.span-desc, .span-desc-highlight, .span-desc-red')) {
+    e.stopPropagation(); 
+
+    hideTooltips(tooltip, tooltipHighlight, tooltipRed);
+
+    const tooltipText = e.target.dataset.tooltip || '';
+    let targetTooltip = tooltip;
+
+    if (e.target.classList.contains('span-desc-highlight')) {
+      targetTooltip = tooltipHighlight;
+    } else if (e.target.classList.contains('span-desc-red')) {
+      targetTooltip = tooltipRed;
+    }
+
+    targetTooltip.textContent = tooltipText;
+    showTooltip(targetTooltip, e);
   }
+});
+
+}
+
 
   function setupGlobalTooltipClose(tooltipMap) {
     document.addEventListener("click", function (e) {
@@ -224,6 +233,7 @@ In contrast, donations to health charities experienced a <span class="span-desc
         clearInterval(interval);
       }
       scoreEl.textContent = `${current}%`;
+
     }, 20); 
   }
 
@@ -238,9 +248,12 @@ In contrast, donations to health charities experienced a <span class="span-desc
     const spanDescHighlights = document.querySelectorAll(".span-desc-highlight");
     const spanDescReds = document.querySelectorAll(".span-desc-red");
 
-    setupTooltip(".span-desc", tooltip, [tooltipHighlight]);
-    setupTooltip(".span-desc-highlight", tooltipHighlight, [tooltip]);
-    setupTooltip(".span-desc-red", tooltipRed, [tooltip]);
+    setupAutoTooltip();
+setupGlobalTooltipClose([
+  [document.querySelectorAll('.span-desc'), tooltip],
+  [document.querySelectorAll('.span-desc-highlight'), tooltipHighlight],
+  [document.querySelectorAll('.span-desc-red'), tooltipRed]
+]);
 
     setupGlobalTooltipClose([
       [spanDescs, tooltip],
