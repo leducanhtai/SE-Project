@@ -47,7 +47,7 @@
           <li class="flex items-center gap-[6px]"><span class="w-[12px] h-[12px] rounded-full bg-[#041318] inline-block"></span> Grammar</li>
         </ul>
         @php
-          $barUnit = 10; // 1 điểm = 10px
+          $barUnit = 19; // 1 điểm = 10px
           $coherenceHeight = $submission->coherence_score * $barUnit;
           $vocabularyHeight = $submission->vocabulary_score * $barUnit;
           $grammarHeight = $submission->grammar_score * $barUnit;

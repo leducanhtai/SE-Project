@@ -72,7 +72,7 @@ PROMPT;
 
         if ($response->status() === 429) {
             Log::warning("Rate limit hit", ['chunk' => $index]);
-            break; 
+            continue; 
         }
 
         $json = $response->json();
@@ -87,7 +87,7 @@ PROMPT;
         $parsed = json_decode($matches[1], true);
         if (!$parsed) {
             Log::warning("Chunk #$index JSON parse failed", ['raw' => $matches[1]]);
-            break;
+            continue;
         }
 
         $totalScore['grammar'] += $parsed['grammar'] ?? 0;
@@ -98,7 +98,7 @@ PROMPT;
         $overallFeedbacks[] = $parsed['overall_feedback'] ?? '';
         $allFeedback = array_merge($allFeedback, $parsed['detailed_feedback'] ?? []);
 
-        sleep(2); 
+        sleep(10); 
         } catch (\Exception $e) {
             Log::error("Chunk #$index exception", ['error' => $e->getMessage()]);
             break;

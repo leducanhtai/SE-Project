@@ -24,7 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('writing_submissions', function (Blueprint $table) {
-            //
+            $table->dropColumn('status');
+            $table->dropColumn('error_message');
         });
     }
 };

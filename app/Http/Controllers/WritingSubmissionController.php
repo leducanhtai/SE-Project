@@ -81,6 +81,23 @@ class WritingSubmissionController extends Controller
 
     public function processing($id)
     {
-        return view('submissions.processing', ['submissionId' => $id]);
+        $submission = WritingSubmission::findOrFail($id);
+
+        return view('submissions.processing', [
+            'submissionId' => $id,
+            'error' => $submission->error_message,
+        ]);
     }
+
+    public function checkError($id)
+{
+    $submission = WritingSubmission::findOrFail($id);
+
+    return response()->json([
+        'status' => $submission->ai_score ? 'done' : 'processing',
+        'error' => $submission->error_message,
+    ]);
 }
+
+
+} 

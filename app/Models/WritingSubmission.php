@@ -24,6 +24,9 @@ class WritingSubmission extends Model
         'submitted_at',
         'score_change',
         'score_increased',
+        'status',
+        'error_message',
+
     ];
 
     public function test()

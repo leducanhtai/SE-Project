@@ -23,45 +23,50 @@ class ProcessWritingSubmission implements ShouldQueue
     }
 
     public function handle(AiScoringService $aiScoring): void
-    {
-        try {
-            Log::info('Start scoring submission', ['submission_id' => $this->validated['submission_id']]);
+{
+    try {
+        Log::info('Start scoring submission', ['submission_id' => $this->validated['submission_id']]);
 
-            $result = $aiScoring->scoreAndStore($this->validated);
+        $result = $aiScoring->scoreAndStore($this->validated);
 
-            $submission = WritingSubmission::find($this->validated['submission_id']);
-            if (!$submission || $submission->ai_score === null) {
-                Log::warning('Submission missing or not scored', ['id' => $this->validated['submission_id']]);
-                return;
-            }
+        $submission = WritingSubmission::find($this->validated['submission_id']);
 
-            $previous = WritingSubmission::where('test_id', $submission->test_id)
-                ->where('id', '<', $submission->id)
-                ->whereNotNull('ai_score')
-                ->orderByDesc('id')
-                ->first();
-
-            $scoreChange = null;
-            $scoreIncreased = null;
-
-            if ($previous) {
-                $scoreChange = $submission->ai_score - $previous->ai_score;
-                $scoreIncreased = $scoreChange > 0;
-
-                $submission->update([
-                    'score_change' => $scoreChange,
-                    'score_increased' => $scoreIncreased,
-                ]);
-            }
-
-            Log::info('Submission processed successfully', ['id' => $submission->id]);
-
-        } catch (\Throwable $e) {
-            Log::error('Job failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            throw $e;
-        }
+        if (!$submission || $submission->ai_score === null) {
+    if ($submission) {
+        $submission->error_message = 'Hệ thống chưa chấm điểm được bài viết này. Vui lòng thử lại sau.';
+        $submission->save();
     }
+
+    Log::warning('Submission missing or not scored', ['id' => $this->validated['submission_id']]);
+    return;
+}
+
+
+        $previous = WritingSubmission::where('test_id', $submission->test_id)
+            ->where('id', '<', $submission->id)
+            ->whereNotNull('ai_score')
+            ->orderByDesc('id')
+            ->first();
+
+        $scoreChange = null;
+        $scoreIncreased = null;
+
+        if ($previous) {
+            $scoreChange = $submission->ai_score - $previous->ai_score;
+            $scoreIncreased = $scoreChange > 0;
+
+            $submission->update([
+                'score_change' => $scoreChange,
+                'score_increased' => $scoreIncreased,
+            ]);
+        }
+
+        Log::info('Submission processed successfully', ['id' => $submission->id]);
+
+    } catch (\Throwable $e) {
+       
+        throw $e;
+    }
+}
+
 }
