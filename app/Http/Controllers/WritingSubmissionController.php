@@ -32,14 +32,22 @@ class WritingSubmissionController extends Controller
             'submission_id' => $submission->id,
         ]);
 
-        return redirect()->route('submissions.processing', ['id' => $submission->id]);
+        
+        $previousSubmission = WritingSubmission::where('test_id', $submission->test_id)
+            ->where('id', '<', $submission->id)
+            ->whereNotNull('ai_score')
+            ->orderByDesc('id')
+            ->first();
+
+       return redirect()->route('submissions.processing', ['id' => $submission->id]);
+
     }
 
    public function show($id)
    {
-    $submission = WritingSubmission::with('feedbacks')->findOrFail($id);
-    $content = $submission->content;
-    $feedbacks = $submission->feedbacks;
+       $submission = WritingSubmission::with('feedbacks')->findOrFail($id);
+       $content = $submission->content;
+       $feedbacks = $submission->feedbacks;
 
     $feedbacks = $feedbacks->sortBy('start_offset');
 

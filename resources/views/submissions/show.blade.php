@@ -11,7 +11,20 @@
       <div class="text-center">
         <p class="text-[24px] font-semibold mb-[10px]">summary score</p>
         <h1 id="score-display" class="text-[96px] font-bold m-0" data-score="{{ $submission->ai_score*10 ?? 0 }}">0%</h1>
-        <p class="text-[24px] mt-[8px]">15% <span class="ml-[8px]">since last test</span></p>
+        <p class="text-[24px] mt-[8px] flex items-center gap-[8px]">
+           @if($submission->score_change !== null)
+              <p class="text-[24px] mt-4 flex items-center space-x-2">
+                <span>{{ abs($submission->score_change * 10) }}%</span>
+                  @if($submission->score_increased)
+                    <img src="{{ asset('icon/up.svg') }}" alt="Tăng so với lần trước" class="w-10 h-10">
+                  @else
+                    <img src="{{ asset('icon/down.svg') }}" alt="Giảm so với lần trước" class="w-10 h-10">
+                  @endif
+                <span>since last test</span>
+              </p>
+            @endif
+        </p>
+
       </div>
       @php
         $score = $submission->ai_score ?? 0;
@@ -33,18 +46,18 @@
           <li class="flex items-center gap-[6px]"><span class="w-[12px] h-[12px] rounded-full bg-[#7042e8] inline-block"></span> Vocabulary</li>
           <li class="flex items-center gap-[6px]"><span class="w-[12px] h-[12px] rounded-full bg-[#041318] inline-block"></span> Grammar</li>
         </ul>
-@php
-  $barUnit = 10; // 1 điểm = 10px
-  $coherenceHeight = $submission->coherence_score * $barUnit;
-  $vocabularyHeight = $submission->vocabulary_score * $barUnit;
-  $grammarHeight = $submission->grammar_score * $barUnit;
-@endphp
+        @php
+          $barUnit = 10; // 1 điểm = 10px
+          $coherenceHeight = $submission->coherence_score * $barUnit;
+          $vocabularyHeight = $submission->vocabulary_score * $barUnit;
+          $grammarHeight = $submission->grammar_score * $barUnit;
+        @endphp
 
-<div class="flex justify-around items-end h-[160px] mb-[20px] gap-[6px]">
-  <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#7edbfb] delay-[200ms]" style="height: {{ $coherenceHeight }}px"></div>
-  <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#7042e8] delay-[400ms]" style="height: {{ $vocabularyHeight }}px"></div>
-  <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#041318] delay-[600ms]" style="height: {{ $grammarHeight }}px"></div>
-</div>
+        <div class="flex justify-around items-end h-[160px] mb-[20px] gap-[6px]">
+          <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#7edbfb] delay-[200ms]" style="height: {{ $coherenceHeight }}px"></div>
+          <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#7042e8] delay-[400ms]" style="height: {{ $vocabularyHeight }}px"></div>
+          <div class="bar-chart w-[40px] rounded-t-[20px] bg-[#041318] delay-[600ms]" style="height: {{ $grammarHeight }}px"></div>
+        </div>
 
       </div>
     </div>
@@ -69,16 +82,16 @@
     <div class="comment-section">
       <h3 class="subtitle text-[20px] font-bold mb-[12px]">Strong points</h3>
       <div class="comment-box bg-white text-black p-[20px_25px] rounded-[20px] leading-[1.6]">
-        <p>Bài viết vẫn tồn tại một số điểm cần khắc phục. Việc lặp lại từ vựng như “slightly” và “approximately” khiến bài viết có phần đơn điệu, cần đa dạng hóa cách diễn đạt. Một số từ như “witnessed fluctuations” chưa hoàn toàn chính xác với dữ liệu, nên được điều chỉnh để tránh gây hiểu nhầm. Cuối cùng, người viết có thể cải thiện tính liên kết giữa các câu bằng cách sử dụng thêm các từ nối và cấu trúc chuyển ý phù hợp nhằm tăng tính mạch lạc (cohesion) cho bài.</p>
+        <p>{{ $submission->ai_feedback }}</p>
       </div>
     </div>
 
-    <div class="comment-section">
+    {{-- <div class="comment-section">
       <h3 class="subtitle text-[20px] font-bold mb-[12px]">Needs improvement</h3>
       <div class="comment-box bg-white text-black p-[20px_25px] rounded-[20px] leading-[1.6]">
         <p>Bài viết thể hiện khả năng paraphrase tốt, với cấu trúc đoạn rõ ràng và dễ theo dõi. Tác giả đã mô tả đầy đủ các dữ liệu chính trong biểu đồ mà không bỏ sót nội dung quan trọng. Ngoài ra, từ vựng được sử dụng khá chính xác, nổi bật với các cụm như “peaking”, “modest increase” và “remained stable”, cho thấy người viết có khả năng lựa chọn từ ngữ phù hợp với ngữ cảnh mô tả số liệu.</p>
       </div>
-    </div>
+    </div> --}}
 
   </div>
 </div>

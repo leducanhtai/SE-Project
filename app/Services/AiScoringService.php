@@ -64,6 +64,11 @@ class AiScoringService
                 ]
             );
 
+            if ($response->status() === 429) {
+                Log::warning('Rate limit hit on Azure OpenAI API', ['response' => $response->body()]);
+                return ['error' => 'RATE_LIMIT'];
+            } 
+
             $json = $response->json();
             $resultContent = $json['choices'][0]['message']['content'] ?? null;
 

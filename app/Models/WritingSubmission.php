@@ -22,6 +22,8 @@ class WritingSubmission extends Model
         'vocabulary_score',
         'grammar_score',
         'submitted_at',
+        'score_change',
+        'score_increased',
     ];
 
     public function test()
