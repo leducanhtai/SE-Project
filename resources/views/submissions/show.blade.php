@@ -64,10 +64,20 @@
   </div>
 </div>
 
+
+
 <!-- AI FEEDBACK -->
 <div class="ai-feedback max-w-[1400px] w-full mx-auto mt-[50px] text-white font-[Poppins]">
   <div class="feedback-title text-[#f5d77f] text-[24px] font-bold mb-[10px]">AI Feedback</div>
   <div class="desc p-[20px] bg-white/25 rounded-[30px] text-[24px]">
+    <div class="desc p-[20px] bg-white/25 rounded-[30px] text-[24px] mb-[20px]">
+        <ul class="list-none flex flex-col gap-[10px] text-[24px] font-medium p-0 text-black items-start mr-[100px]">
+          <li class="flex items-center gap-[6px]"><span class="w-[20px] h-[20px] rounded-[5px] bg-green-300/60 inline-block"></span> Coherence</li>
+          <li class="flex items-center gap-[6px]"><span class="w-[20px] h-[20px] rounded-[5px] bg-yellow-200/60 inline-block"></span> Vocabulary</li>
+          <li class="flex items-center gap-[6px]"><span class="w-[20px] h-[20px] rounded-[5px] bg-red-200/60 inline-block"></span> Grammar</li>
+        </ul>
+
+  </div>
     <p id="feedback-text" class="leading-8 text-[18px]">
        {!! $highlightedContent !!}
     </p>
