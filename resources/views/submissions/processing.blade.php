@@ -72,7 +72,7 @@
 
     setTimeout(() => {
         window.location.reload();
-    }, 30000);
+    }, 50000);
     @endif
 </script>
 

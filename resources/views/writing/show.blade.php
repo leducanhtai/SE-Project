@@ -91,7 +91,7 @@
         countdownElement.textContent = 'Hết giờ';
         textarea.disabled = true;
 
-        alert('Đã hết thời gian làm bài! Bài sẽ được nộp tự động.');
+        alert('Đã hết thời gian làm bài!');
 
         localStorage.removeItem(answerKey);
         localStorage.removeItem(startTimeKey);
@@ -126,14 +126,18 @@
         });
 
         confirmSubmit.addEventListener('click', function () {
+   
+            confirmSubmit.disabled = true;
+            confirmSubmit.textContent = 'Đang nộp...';
+
             textarea.disabled = false;
             localStorage.removeItem(answerKey);
             localStorage.removeItem(startTimeKey);
             form.submit();
         });
+
     }
 
-    // Khởi chạy
     initStartTime();
     let timeLeft = calculateTimeLeft();
     const countdownInterval = setInterval(() => {

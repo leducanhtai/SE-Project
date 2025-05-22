@@ -33,7 +33,7 @@ class ProcessWritingSubmission implements ShouldQueue
 
         if (!$submission || $submission->ai_score === null) {
     if ($submission) {
-        $submission->error_message = 'Hệ thống chưa chấm điểm được bài viết này. Vui lòng thử lại sau.';
+        $submission->error_message = 'Hệ thống AI bị quá tải. Vui lòng thử lại sau.';
         $submission->save();
     }
 
