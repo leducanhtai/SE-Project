@@ -18,7 +18,7 @@ class WritingSubmissionController extends Controller
     {
         $validated = $request->validate([
             'test_id' => 'required|exists:writing_tests,id',
-            'content' => 'required|string|min:50',
+            'content' => 'required|string|min:1',
         ]);
 
         $submission = WritingSubmission::create([
