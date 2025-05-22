@@ -9,6 +9,7 @@ use App\Models\WritingTest;
 use App\Models\WritingSubmissionFeedBack;
 use App\Services\AiScoringService;
 use Illuminate\Support\Str;
+use App\Models\Trick;
 
 
 class WritingSubmissionController extends Controller
@@ -85,10 +86,12 @@ class WritingSubmissionController extends Controller
     public function processing($id)
     {
         $submission = WritingSubmission::findOrFail($id);
+        $tricks = Trick::all();
 
         return view('submissions.processing', [
             'submissionId' => $id,
             'error' => $submission->error_message,
+            'tricks' => $tricks,
         ]);
     }
 
