@@ -33,7 +33,7 @@
       </div>
 
       <!-- Progress bar thay thế spinner -->
-        <div class="w-[600px] h-3 rounded-full overflow-hidden bg-gray-300 mb-6 mx-auto">
+        <div class="w-[690px] h-3 rounded-full overflow-hidden bg-gray-300 mb-6 mx-auto">
             <div id="progress-bar" class="h-full bg-yellow-300 transition-all duration-500" style="width: 0%"></div>
         </div>
 
@@ -77,42 +77,48 @@
     </style>
 
     <script>
-        @if (!$error)
-        const errorBox = document.getElementById('error-box');
+    @if (!$error)
+    const errorBox = document.getElementById('error-box');
+    const progressBar = document.getElementById('progress-bar');
+    let progress = 0;
+    let intervalId;
 
-        const checkStatus = async () => {
-            try {
-                const res = await fetch('/submission/{{ $submissionId }}/check-error');
-                const data = await res.json();
+    const checkStatus = async () => {
+        try {
+            const res = await fetch('/submission/{{ $submissionId }}/check-error');
+            const data = await res.json();
 
-                if (data.status === 'done') {
+            if (data.status === 'done') {
+                clearInterval(intervalId);
+                progressBar.style.width = '100%';
+                setTimeout(() => {
                     window.location.href = '/submission/{{ $submissionId }}';
-                } else if (data.error) {
-                    errorBox.innerHTML = '<strong>Lỗi:</strong> ' + data.error;
-                    errorBox.style.display = 'inline-block';
-                }
-            } catch (err) {
-                console.error("Không thể kiểm tra trạng thái:", err);
+                }, 500); // cho người dùng thấy 100%
+            } else if (data.error) {
+                clearInterval(intervalId);
+                errorBox.innerHTML = '<strong>Lỗi:</strong> ' + data.error;
+                errorBox.style.display = 'inline-block';
             }
-        };
+        } catch (err) {
+            console.error("Không thể kiểm tra trạng thái:", err);
+        }
+    };
 
-        setInterval(checkStatus, 3000);
+    intervalId = setInterval(() => {
+        if (progress < 95) {
+            progress += Math.random() * 8; 
+            if (progress > 95) progress = 95;
+            progressBar.style.width = progress + '%';
+        }
+    }, 300);
 
-        setTimeout(() => {
-            window.location.reload();
-        }, 50000);
-        @endif
+    setInterval(checkStatus, 3000);
 
+    setTimeout(() => {
+        window.location.reload();
+    }, 50000);
+    @endif
+</script>
 
-      const tricks = @json($tricks->pluck('trick'));
-      let currentTrick = 0;
-
-      if (tricks.length > 1) {
-        setInterval(() => {
-          currentTrick = (currentTrick + 1) % tricks.length;
-          document.getElementById('trick-text').innerText = tricks[currentTrick];
-        }, 3000);
-      }
-    </script>
   </body>
 </html>
