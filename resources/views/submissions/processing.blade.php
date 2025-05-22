@@ -77,48 +77,85 @@
     </style>
 
     <script>
-    @if (!$error)
-    const errorBox = document.getElementById('error-box');
-    const progressBar = document.getElementById('progress-bar');
-    let progress = 0;
-    let intervalId;
+  @if (!$error)
+  const tricks = @json($tricks->pluck('trick'));
+  const submissionId = "{{ $submissionId }}";
+  const errorBox = document.getElementById('error-box');
+  const progressBar = document.getElementById('progress-bar');
+  const trickText = document.getElementById('trick-text');
 
-    const checkStatus = async () => {
-        try {
-            const res = await fetch('/submission/{{ $submissionId }}/check-error');
-            const data = await res.json();
+  // ---- Trick auto switching ----
+  let currentTrickIndex = 0;
+  if (tricks.length > 1) {
+    setInterval(() => {
+      currentTrickIndex = (currentTrickIndex + 1) % tricks.length;
+      trickText.textContent = tricks[currentTrickIndex];
+    }, 3000);
+  }
 
-            if (data.status === 'done') {
-                clearInterval(intervalId);
-                progressBar.style.width = '100%';
-                setTimeout(() => {
-                    window.location.href = '/submission/{{ $submissionId }}';
-                }, 500); // cho người dùng thấy 100%
-            } else if (data.error) {
-                clearInterval(intervalId);
-                errorBox.innerHTML = '<strong>Lỗi:</strong> ' + data.error;
-                errorBox.style.display = 'inline-block';
-            }
-        } catch (err) {
-            console.error("Không thể kiểm tra trạng thái:", err);
-        }
-    };
+  // ---- Progress restore from localStorage ----
+  let progress = 0;
+  let intervalId;
+  const savedState = JSON.parse(localStorage.getItem('gradingProgress'));
+  if (savedState && savedState.submissionId === submissionId) {
+    progress = savedState.progress || 0;
+    progressBar.style.width = progress + '%';
+  } else {
+    localStorage.setItem('gradingProgress', JSON.stringify({
+      submissionId,
+      progress: 0
+    }));
+  }
 
-    intervalId = setInterval(() => {
-        if (progress < 95) {
-            progress += Math.random() * 8; 
-            if (progress > 95) progress = 95;
-            progressBar.style.width = progress + '%';
-        }
-    }, 300);
+  // ---- Check grading status ----
+  const checkStatus = async () => {
+    try {
+      const res = await fetch(`/submission/${submissionId}/check-error`);
+      const data = await res.json();
 
-    setInterval(checkStatus, 3000);
+      if (data.status === 'done') {
+        clearInterval(intervalId);
+        progressBar.style.width = '100%';
+        localStorage.removeItem('gradingProgress');
 
-    setTimeout(() => {
-        window.location.reload();
-    }, 50000);
-    @endif
+        setTimeout(() => {
+          window.location.href = `/submission/${submissionId}`;
+        }, 500);
+      } else if (data.error) {
+        clearInterval(intervalId);
+        errorBox.innerHTML = '<strong>Lỗi:</strong> ' + data.error;
+        errorBox.style.display = 'inline-block';
+      }
+    } catch (err) {
+      console.error("Không thể kiểm tra trạng thái:", err);
+    }
+  };
+
+  // ---- Progress animation + save to localStorage ----
+  intervalId = setInterval(() => {
+    if (progress < 95) {
+      progress += Math.random() * 8;
+      if (progress > 95) progress = 95;
+
+      progressBar.style.width = progress + '%';
+
+      localStorage.setItem('gradingProgress', JSON.stringify({
+        submissionId,
+        progress
+      }));
+    }
+  }, 300);
+
+  // ---- Periodically check grading status ----
+  setInterval(checkStatus, 3000);
+
+  // ---- Auto reload as fallback after 50s ----
+  setTimeout(() => {
+    window.location.reload();
+  }, 50000);
+  @endif
 </script>
+
 
   </body>
 </html>

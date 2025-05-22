@@ -13,6 +13,18 @@
             {{ $writingTest->task_content }}
         </p>
 
+        @if ($writingTest->task_image)
+            <div class="mb-6 text-center">
+                <img
+                    src="{{ asset('image/' . $writingTest->task_image) }}"
+                    alt="Task Image"
+                    class="w-[900px] mx-auto rounded-[30px] shadow-lg"
+                />
+            </div>
+        @endif
+
+    
+
         <form id="writingForm" action="{{ route('writing.submit') }}" method="POST">
             @csrf
             <input type="hidden" name="test_id" value="{{ $writingTest->id }}">
@@ -22,7 +34,7 @@
                 name="content"
                 required
                 placeholder="Viết bài tại đây..."
-                class="w-full min-h-[400px] bg-white text-gray-900 rounded-[20px] p-5 text-base leading-relaxed shadow-[0_10px_30px_rgba(0,0,0,0.2)] resize-y font-['Poppins'] box-border"
+                class="w-full min-h-[400px] bg-white text-gray-900 rounded-[20px] p-5 text-base leading-relaxed shadow-[0_10px_30px_rgba(0,0,0,0.2)] resize-y font-['Poppins'] box-border "
             ></textarea>
 
             <div id="wordCount" class="text-right text-base font-medium mt-3" style="text-shadow: 0px 0px 20px rgba(240,229,15,0.876);">
