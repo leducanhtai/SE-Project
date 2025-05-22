@@ -32,10 +32,11 @@
         </div>
       </div>
 
-      <!-- Spinner giữ nguyên -->
-      <div class="loader mb-6">
-        <div class="spinner"></div>
-      </div>
+      <!-- Progress bar thay thế spinner -->
+        <div class="w-[600px] h-3 rounded-full overflow-hidden bg-gray-300 mb-6 mx-auto">
+            <div id="progress-bar" class="h-full bg-yellow-300 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
 
       <!-- Error box giữ nguyên -->
       <div
