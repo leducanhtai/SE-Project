@@ -1,36 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Font -->
+    <title>@yield('title', 'Linglooma')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-
-    <title>Linglooma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        body {
-            font-family: "Josefin Sans", sans-serif;
-        }
-    </style>
+    @stack('styles')
 </head>
-<body class="bg-[#231735] text-[#f8f7b8] font-bold" style="font-family: 'Josefin Sans', sans-serif;">
-
-    @include('layouts.navigation')    
-
-    <div class="flex h-[calc(100vh-100px)] overflow-hidden">
-        @include('layouts.sidebar')
-
-        <div class="flex-1 p-5 overflow-y-auto text-shadow">
-            @yield('content')
+<body class="font-sans bg-figma-bg-dark text-figma-text-light antialiased">
+    <div class="flex min-h-screen">
+        @include('partials.sidebar')
+        <div class="flex-1 flex flex-col overflow-hidden">
+            @include('partials.header')
+            <main class="flex-1 p-6 md:p-8 lg:p-10 overflow-y-auto">
+                @yield('content')
+            </main>
         </div>
     </div>
-
-    @include('layouts.footer')
-
+    @stack('scripts')
 </body>
 </html>
