@@ -24,4 +24,9 @@ Route::get('/api/submission-status/{id}', function ($id) {
         'status' => $submission && $submission->ai_score !== null ? 'done' : 'processing',
     ];
 });
+Route::get('/submission/{id}/status', [WritingSubmissionController::class, 'status'])->name('submissions.status');
+Route::get('/api/check-error/{id}', [WritingSubmissionController::class, 'checkError']);
+Route::get('/submission/{id}/check-error', [\App\Http\Controllers\WritingSubmissionController::class, 'checkError']);
+
+
 
