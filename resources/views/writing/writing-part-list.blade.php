@@ -22,7 +22,7 @@
                 </div>
             </a>
     
-            <a href="#"
+            <a href="{{ route('writing.test.index') }}"
                class="bg-white/25 bg-figma-card-bg p-6 rounded-xl shadow-xl flex flex-col text-center group hover:shadow-2xl hover:-translate-y-1.5 transform transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-figma-accent focus:ring-offset-2 focus:ring-offset-figma-bg-dark animate-rise-up delay-[300ms]">
                 <div class="mb-5 h-40 md:h-48 flex items-center justify-center">
                     <img class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
@@ -34,7 +34,7 @@
                 </div>
             </a>
     
-            <a href="#"
+            <a href="{{ route('writing.test.index') }}"
                class="bg-white/25 bg-figma-card-bg p-6 rounded-xl shadow-xl flex flex-col text-center group hover:shadow-2xl hover:-translate-y-1.5 transform transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-figma-accent focus:ring-offset-2 focus:ring-offset-figma-bg-dark animate-rise-up delay-[450ms]">
                 <div class="mb-5 h-40 md:h-48 flex items-center justify-center">
                     <img class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"

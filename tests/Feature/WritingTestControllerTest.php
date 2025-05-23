@@ -15,7 +15,7 @@ class WritingTestControllerTest extends TestCase
         $task2Test = WritingTest::factory()->create(['task' => 'task2']);
         WritingTest::factory()->create(['task' => 'task1']); // should be excluded
 
-        $response = $this->get(route('writing.index'));
+        $response = $this->get(route('writing.test.index'));
 
         $response->assertStatus(200);
         $response->assertViewIs('writing.index');
@@ -28,7 +28,7 @@ class WritingTestControllerTest extends TestCase
     {
         $test = WritingTest::factory()->create();
 
-        $response = $this->get(route('writing.show', ['id' => $test->id]));
+        $response = $this->get(route('writing.test.show', ['id' => $test->id]));
 
         $response->assertStatus(200);
         $response->assertViewIs('writing.show');

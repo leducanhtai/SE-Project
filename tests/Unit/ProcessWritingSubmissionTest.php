@@ -4,6 +4,7 @@ namespace Tests\Unit\Jobs;
 
 use App\Jobs\ProcessWritingSubmission;
 use App\Models\WritingSubmission;
+use App\Models\WritingTest;
 use App\Services\AiScoringService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
@@ -16,9 +17,11 @@ class ProcessWritingSubmissionTest extends TestCase
 
     public function test_job_calls_score_and_updates_submission()
     {
-        // Fake submission data
+        $test = WritingTest::factory()->create(); 
+
         $submission = WritingSubmission::factory()->create([
             'ai_score' => null,
+            'test_id' => $test->id, 
         ]);
 
         $validated = [
@@ -27,7 +30,6 @@ class ProcessWritingSubmissionTest extends TestCase
             'content' => 'Nội dung bài viết',
         ];
 
-        // Mock AiScoringService
         $mockAiService = Mockery::mock(AiScoringService::class);
         $mockAiService->shouldReceive('scoreAndStore')
             ->once()
@@ -36,7 +38,6 @@ class ProcessWritingSubmissionTest extends TestCase
 
         $this->app->instance(AiScoringService::class, $mockAiService);
 
-        // Update ai_score manually to simulate that AI already stored it
         $submission->update(['ai_score' => 85]);
 
         $job = new ProcessWritingSubmission($validated);
@@ -49,8 +50,11 @@ class ProcessWritingSubmissionTest extends TestCase
 
     public function test_job_sets_error_message_if_ai_score_missing()
     {
+        $test = WritingTest::factory()->create(); 
+
         $submission = WritingSubmission::factory()->create([
             'ai_score' => null,
+            'test_id' => $test->id, 
         ]);
 
         $validated = [
@@ -77,13 +81,15 @@ class ProcessWritingSubmissionTest extends TestCase
 
     public function test_job_calculates_score_change_correctly()
     {
+        $test = WritingTest::factory()->create(); 
+
         $previous = WritingSubmission::factory()->create([
-            'test_id' => 1,
+            'test_id' => $test->id,
             'ai_score' => 70,
         ]);
 
         $submission = WritingSubmission::factory()->create([
-            'test_id' => 1,
+            'test_id' => $test->id,
             'ai_score' => null,
         ]);
 
@@ -101,7 +107,6 @@ class ProcessWritingSubmissionTest extends TestCase
 
         $this->app->instance(AiScoringService::class, $mockAiService);
 
-        // Simulate score saved by AI
         $submission->update(['ai_score' => 80]);
 
         $job = new ProcessWritingSubmission($validated);
@@ -110,7 +115,8 @@ class ProcessWritingSubmissionTest extends TestCase
         $submission->refresh();
 
         $this->assertEquals(10, $submission->score_change);
-        $this->assertTrue($submission->score_increased);
+        $this->assertEquals(true, $submission->score_increased);
+
     }
 
     protected function tearDown(): void
