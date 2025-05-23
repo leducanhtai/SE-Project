@@ -59,7 +59,7 @@ class AiScoringServiceTest extends TestCase
 
         $result = $service->scoreAndStore([
             'test_id' => $test->id,
-            'submission_id' => $submission->id, // Thêm dòng này
+            'submission_id' => $submission->id, 
             'content' => $submission->content,
         ]);
 
