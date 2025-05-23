@@ -1,4 +1,4 @@
-@extends('layouts.public') {{-- Kế thừa từ layout chung --}}
+@extends('layouts.app') {{-- Kế thừa từ layout chung --}}
 
 @section('title', 'Trang Chủ - Linglooma') {{-- Đặt tiêu đề cho trang này --}}
 
@@ -14,10 +14,13 @@
                     Luyện thi IELTS thông minh với trợ lý AI. Chấm điểm ngay lập tức, cả speaking và writing. Phản hồi cá nhân hoá. Theo dõi tiến độ học tập rõ ràng.
                 </p>
                 <div class="space-x-4">
-                    <a href="{{ route('register') }}" class="btn-primary bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg">
+                    {{-- <a href="{{ route('register') }}" class="btn-primary bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg">
                         Bắt đầu miễn phí
-                    </a>
-                    <a href="{{ route('courses.index') }}" class="btn-secondary bg-white text-orange-500 font-bold py-3 px-8 rounded-lg text-lg hover:bg-gray-100">
+                    </a> --}}
+                    {{-- <a href="{{ route('courses.index') }}" class="btn-secondary bg-white text-orange-500 font-bold py-3 px-8 rounded-lg text-lg hover:bg-gray-100">
+                        Khám phá khoá học
+                    </a> --}}
+                     <a href="#" class="btn-secondary bg-white text-orange-500 font-bold py-3 px-8 rounded-lg text-lg hover:bg-gray-100">
                         Khám phá khoá học
                     </a>
                 </div>

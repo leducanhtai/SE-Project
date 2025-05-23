@@ -6,16 +6,17 @@
     <title>@yield('title', 'Linglooma')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {{-- THAY BẰNG FONT BẠN DÙNG TRONG FIGMA --}}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="font-sans bg-figma-bg-dark text-figma-text-light antialiased">
+<body class="font-sans bg-gray-100 text-db-text-content antialiased"> {{-- Nền xám nhạt cho body --}}
     <div class="flex min-h-screen">
-        @include('partials.sidebar')
-        <div class="flex-1 flex flex-col overflow-hidden">
-            @include('partials.header')
-            <main class="flex-1 p-6 md:p-8 lg:p-10 overflow-y-auto">
+        @include('partials.sidebar') {{-- Sử dụng sidebar đã code cho Dashboard --}}
+        <div class="flex-1 flex flex-col bg-db-bg"> {{-- Nền trắng cho content area --}}
+            @include('partials.header') {{-- Sử dụng header đã code cho Dashboard --}}
+            <main class="flex-1 p-6 md:p-8 overflow-y-auto">
                 @yield('content')
             </main>
         </div>
