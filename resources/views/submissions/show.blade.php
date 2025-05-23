@@ -86,8 +86,8 @@
     <h2 class="title text-[#f5d77f] text-[24px] font-bold mb-[30px]">General comments</h2>
     <div class="general-comments bg-white/25 p-[30px] rounded-[30px] space-y-[30px]">
       <div class="comment-section">
-        <h3 class="subtitle text-[20px] font-bold mb-[12px]">Strong points</h3>
-        <div class="comment-box bg-white text-black p-[20px_25px] rounded-[20px] leading-[1.6]">
+        <h3 class="subtitle text-[20px] font-bold mb-[12px]">Points for improvement</h3>
+        <div class="comment-box bg-white text-black p-[20px_25px] rounded-[20px] leading-[2]">
           <p>{{ $submission->ai_feedback }}</p>
         </div>
       </div>

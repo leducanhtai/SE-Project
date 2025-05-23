@@ -8,7 +8,7 @@ use App\Http\Controllers\WritingSubmissionFeedbackController;
 use App\Services\AiScoringService;
 
 Route::get('/', function () {
-    return view('home');
+    return view('public_pages.home');
 })->name('home');
 
 
@@ -27,6 +27,7 @@ Route::get('/api/submission-status/{id}', function ($id) {
 Route::get('/submission/{id}/status', [WritingSubmissionController::class, 'status'])->name('submissions.status');
 Route::get('/api/check-error/{id}', [WritingSubmissionController::class, 'checkError']);
 Route::get('/submission/{id}/check-error', [\App\Http\Controllers\WritingSubmissionController::class, 'checkError']);
-
+Route::get('/part',[WritingTestController::class, 'showPart'])->name('writing.test.part');
+Route::get('/dashboard',[WritingTestController::class, 'showDashboard'])->name('dashboard');
 
 
