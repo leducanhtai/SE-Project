@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Choose Your Writing Part'); ?>
 
-@section('title', 'Choose Your Writing Part')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="text-center pt-8 md:pt-12 pb-10 md:pb-16">
     <h1 class="text-4xl lg:text-5xl font-extrabold text-figma-text-title mb-12 lg:mb-16 text-shadow-glow-yellow">
         Choose your writing part
@@ -10,11 +8,11 @@
 
     <div class="bg-[url('/public/image/part-background-image.png')] bg-cover bg-center max-w-6xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <a href="{{ route('writing.test.index') }}"
+            <a href="<?php echo e(route('writing.test.index')); ?>"
                class="bg-white/25 bg-figma-card-bg p-6 rounded-xl shadow-xl flex flex-col text-center group hover:shadow-2xl hover:-translate-y-1.5 transform transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-figma-accent focus:ring-offset-2 focus:ring-offset-figma-bg-dark animate-rise-up delay-[30ms] min-h-[600px]">
                 <div class="mb-5 h-40 md:h-48 flex items-center justify-center">
                     <img class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-                         src="{{ asset('/image/part1-image.png') }}" alt="Part 1 Illustration"/>
+                         src="<?php echo e(asset('/image/part1-image.png')); ?>" alt="Part 1 Illustration"/>
                 </div>
                 <h2 class="text-2xl lg:text-3xl font-bold text-figma-text-card-title mb-3">Part 1</h2>
                 <div class="text-figma-text-card-desc text-sm leading-relaxed mb-4 flex-grow px-1 min-h-[80px]">
@@ -22,11 +20,11 @@
                 </div>
             </a>
     
-            <a href="{{ route('writing.test.index') }}"
+            <a href="<?php echo e(route('writing.test.index')); ?>"
                class="bg-white/25 bg-figma-card-bg p-6 rounded-xl shadow-xl flex flex-col text-center group hover:shadow-2xl hover:-translate-y-1.5 transform transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-figma-accent focus:ring-offset-2 focus:ring-offset-figma-bg-dark animate-rise-up delay-[300ms]">
                 <div class="mb-5 h-40 md:h-48 flex items-center justify-center">
                     <img class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-                         src="{{ asset('/image/part2-image.png') }}" alt="Part 2 Illustration"/>
+                         src="<?php echo e(asset('/image/part2-image.png')); ?>" alt="Part 2 Illustration"/>
                 </div>
                 <h2 class="text-2xl lg:text-3xl font-bold text-figma-text-card-title mb-3">Part 2</h2>
                 <div class="text-figma-text-card-desc text-sm leading-relaxed mb-4 flex-grow px-1 min-h-[80px]">
@@ -34,11 +32,11 @@
                 </div>
             </a>
     
-            <a href="{{ route('writing.test.index') }}"
+            <a href="<?php echo e(route('writing.test.index')); ?>"
                class="bg-white/25 bg-figma-card-bg p-6 rounded-xl shadow-xl flex flex-col text-center group hover:shadow-2xl hover:-translate-y-1.5 transform transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-figma-accent focus:ring-offset-2 focus:ring-offset-figma-bg-dark animate-rise-up delay-[450ms]">
                 <div class="mb-5 h-40 md:h-48 flex items-center justify-center">
                     <img class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-                         src="{{ asset('/image/part3-image.png') }}" alt="Part 3 Illustration"/>
+                         src="<?php echo e(asset('/image/part3-image.png')); ?>" alt="Part 3 Illustration"/>
                 </div>
                 <h2 class="text-2xl lg:text-3xl font-bold text-figma-text-card-title mb-3">Part 3</h2>
                 <div class="text-figma-text-card-desc text-sm leading-relaxed mb-4 flex-grow px-1 min-h-[80px]">
@@ -48,4 +46,6 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Admin\Downloads\SE-Project-main (4)\SE-Project-main\resources\views/writing/writing-part-list.blade.php ENDPATH**/ ?>

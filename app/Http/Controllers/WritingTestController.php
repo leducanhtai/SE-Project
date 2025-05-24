@@ -28,4 +28,14 @@ class WritingTestController extends Controller
             ]
         );
     }
+
+    public function showPart()
+    {
+       return view('writing.writing-part-list');
+    }
+
+    public function showDashboard()
+    {
+        return view('dashboard.index');
+    }
 }

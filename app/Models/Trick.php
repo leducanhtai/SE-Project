@@ -7,4 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class trick extends Model
 {
     //
+    protected $fillable = [
+        'trick',
+    ];
 }
