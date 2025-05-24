@@ -19,7 +19,7 @@ class WritingTestFactory extends Factory
         return [
             'title' => $this->faker->sentence(6),
             'description' => $this->faker->paragraph(3),
-            'image' => $this->faker->image('public/image', 640, 480, null, false),
+            'image' => $this->faker->imageUrl(640, 480),
             // Thêm các trường khác nếu model có
         ];
     }
