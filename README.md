@@ -1,6 +1,7 @@
 # Linglooma Writing
 
 Linglooma Writing là một ứng dụng luyện thi IELTS thông minh, hỗ trợ chấm điểm tự động cho kỹ năng **Writing** (và **Speaking**), cung cấp phản hồi cá nhân hóa và theo dõi tiến độ học tập.
+
 <img width="2559" height="1431" alt="image" src="https://github.com/user-attachments/assets/835ba177-3aa0-4be7-b206-6ede75b17165" />
 
 
@@ -14,8 +15,10 @@ Linglooma Writing là một ứng dụng luyện thi IELTS thông minh, hỗ tr�
 <img width="2559" height="1443" alt="image" src="https://github.com/user-attachments/assets/78d59da0-1ba6-4120-9f38-43c7a95da7cc" />
 
 * **Chấm điểm AI tự động**: Điểm số chính xác theo tiêu chí IELTS, phản hồi chi tiết từng tiêu chí (*Coherence, Grammar, Vocabulary*).
-* <img width="1869" height="667" alt="Screenshot 2025-09-28 141258" src="https://github.com/user-attachments/assets/7b8d0fb7-6913-4805-ae5d-0fa353625108" />
+
+<img width="1869" height="667" alt="Screenshot 2025-09-28 141258" src="https://github.com/user-attachments/assets/7b8d0fb7-6913-4805-ae5d-0fa353625108" />
 <img width="2018" height="1059" alt="Screenshot 2025-09-28 141321" src="https://github.com/user-attachments/assets/fa342cf0-f558-4e00-b906-bd1d9068fd3b" />
+
 * **Giao diện hiện đại, dễ sử dụng**: Responsive, hỗ trợ cả desktop và mobile.
 * **Tích hợp Laravel Dusk**: Kiểm thử giao diện tự động.
 
